@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: mini-magjong
+    name: mini-mahjong
     runtime: docker
     plan: free
     healthCheckPath: /api/health

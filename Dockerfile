@@ -1,0 +1,11 @@
+FROM python:3.12-slim
+
+WORKDIR /app
+ENV HOST=0.0.0.0
+ENV PORT=8080
+ENV PYTHONUNBUFFERED=1
+
+COPY . /app
+
+EXPOSE 8080
+CMD ["python", "mazak.py"]

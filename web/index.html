@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>리치마작 2인 대전 (Mahjong Web)</title>
+  <link rel="stylesheet" href="style.css?v=20261027_meld_flash_2">
+</head>
+<body>
+  <div class="game-container" id="game-container" style="visibility: hidden;">
+    <!-- 상단 헤더 정보 바 -->
+    <header class="game-header">
+      <div class="header-left">
+        <span class="game-title">🀄 2인 리치마작</span>
+        <span class="badge round-wind" id="round-wind">동 1국</span>
+      </div>
+      <div class="header-center">
+        <div class="info-pill">남은 산: <strong id="wall-count">0</strong>장</div>
+        <div class="info-pill dora-box">도라 표시패: <span id="dora-tile" class="tile-mini"></span></div>
+      </div>
+      <div class="header-right">
+        <div class="header-controls">
+          <span class="info-pill" id="history-count" aria-live="polite">보존 기록: 0</span>
+          <label class="motion-toggle-label header-motion-toggle" for="reduce-motion-toggle" title="치·퐁·깡·리치 선택 UI의 움직임 줄이기">
+            <input id="reduce-motion-toggle" type="checkbox">
+            움직임 줄이기
+          </label>
+          <button id="btn-pause" class="btn btn-secondary" aria-label="일시정지">일시정지</button>
+          <button id="btn-restart" class="btn btn-secondary">새 게임</button>
+        </div>
+      </div>
+    </header>
+
+    <!-- 마작 탁자 (초록색 펠트) -->
+    <main class="table-felt">
+      <!-- AI 영역 (상단) -->
+      <section class="seat ai-seat">
+        <div class="player-info-tag">
+          <span class="avatar">🤖</span>
+          <span class="player-name">상대 AI</span>
+          <span class="player-wind" id="ai-wind">남</span>
+          <span class="riichi-tag" id="ai-riichi-badge" style="display: none;">리치!!</span>
+        </div>
+        
+        <!-- AI 손패 (뒷면) -->
+        <div class="hand-row ai-hand" id="ai-hand-tiles"></div>
+        
+        <!-- AI 울기 멘츠 -->
+        <div class="melds-row" id="ai-melds"></div>
+      </section>
+
+      <!-- 중앙 버림패 하천(河) & 턴 상태 안내 영역 -->
+      <div class="center-discards-arena">
+        <!-- AI 버림패 (상단 하천) -->
+        <div class="pond-container">
+          <div class="discard-pond ai-pond" id="ai-discards"></div>
+        </div>
+
+        <!-- 중앙 상태 메시지 & 리치봉/턴 표시 -->
+        <div class="table-center">
+          <div class="turn-indicator" id="turn-indicator">당신의 턴입니다</div>
+          <div class="center-banner" id="center-banner"></div>
+        </div>
+
+        <!-- 플레이어 버림패 (하단 하천) -->
+        <div class="pond-container">
+          <div class="discard-pond human-pond" id="human-discards"></div>
+        </div>
+      </div>
+
+      <!-- 플레이어 손패 영역 (하단 고정) -->
+      <section class="seat human-seat">
+        <!-- 텐파이 및 대기패 안내 바 -->
+        <div class="tenpai-bar" id="tenpai-bar" style="display: none;">
+          <span class="tenpai-label">💡 텐파이! 대기패:</span>
+          <div class="tenpai-tiles" id="tenpai-tiles"></div>
+          <span class="furiten-label" id="furiten-label" style="display: none;">※ 후리텐 (론 불가, 쯔모만 가능)</span>
+        </div>
+
+        <div class="player-info-tag">
+          <span class="avatar">👤</span>
+          <span class="player-name">당신</span>
+          <span class="player-wind" id="human-wind">동</span>
+          <span class="riichi-tag" id="human-riichi-badge" style="display: none;">리치 선언완료</span>
+        </div>
+
+        <!-- 플레이어 손패 및 쯔모패 -->
+        <div class="human-hand-wrapper">
+          <div class="hand-row human-hand" id="human-hand-tiles"></div>
+          <div class="drawn-tile-slot" id="drawn-tile-slot"></div>
+          <div class="melds-row human-melds" id="human-melds"></div>
+        </div>
+
+        <!-- 액션 버튼 컨트롤러 바 -->
+        <div class="action-bar" id="action-bar">
+          <button id="btn-tsumo" class="btn btn-action btn-win" style="display: none;">쯔모 화료!!</button>
+          <button id="btn-tsumogiri" class="btn btn-action btn-secondary" style="display: none;">쯔모패 버리기</button>
+          <button id="btn-riichi" class="btn btn-action btn-riichi" style="display: none;">리치 선언</button>
+          <button id="btn-kan" class="btn btn-action btn-meld" style="display: none;">깡</button>
+        </div>
+        <p class="riichi-status" id="riichi-status" aria-live="polite"></p>
+      </section>
+    </main>
+  </div>
+
+  <!-- 시작 화면 모달 (게임 시작 버튼) -->
+  <div class="modal-overlay" id="start-modal" style="display: flex;">
+    <div class="modal-box start-box">
+      <h1 class="start-title">🀄 리치마작 2인 대전</h1>
+      <p class="start-subtitle">플레이어 (당신) vs AI 봇</p>
+      
+      <div class="start-rules-card">
+        <h3>게임 규칙</h3>
+        <ul>
+          <li><strong>지원 기능:</strong> 리치, 치, 퐁, 깡, 론, 쯔모</li>
+          <li><strong>지원 역:</strong> 리치, 문전청자모, 핑후, 탕야오, 역패, 치토이츠, 또이또이</li>
+          <li><strong>편의 기능:</strong> 텐파이 시 실시간 대기패 표시, 후리텐 실시간 감지</li>
+        </ul>
+      </div>
+
+      <section class="difficulty-card" aria-labelledby="difficulty-title">
+        <label id="difficulty-title" for="difficulty-select">AI 난이도</label>
+        <select id="difficulty-select" aria-describedby="difficulty-description">
+          <option value="low">하</option>
+          <option value="medium">중</option>
+          <option value="high">상</option>
+        </select>
+        <p id="difficulty-description">AI는 선택된 목표 역 중 하나 이상을 만족할 때 화료합니다.</p>
+        <p class="difficulty-target-label">AI 목표 역</p>
+        <ul id="difficulty-target-yaku"></ul>
+      </section>
+
+      <section class="saved-records-card" aria-labelledby="saved-records-title">
+        <h3 id="saved-records-title">보존된 대국 기록</h3>
+        <p class="saved-records-note">최근 대국 결과 최대 30건을 이 브라우저에 저장합니다. 새 게임을 시작해도 기록은 유지됩니다.</p>
+        <ul id="saved-records-list" aria-live="polite"></ul>
+      </section>
+
+      <button id="btn-how-to-play" class="btn btn-secondary" aria-expanded="false" aria-controls="how-to-play-panel">게임 방법</button>
+      <div id="how-to-play-panel" class="how-to-play-panel" hidden>
+        <h3>조작 방법</h3>
+        <ul>
+          <li>내 차례에 손패를 클릭하면 해당 패를 버립니다. 리치 후에는 쯔모패만 버릴 수 있습니다.</li>
+          <li>리치 버튼을 누른 뒤 표시되는 후보 패를 선택하면 리치를 선언합니다.</li>
+          <li>상대가 패를 버리면 화면의 론·치·퐁·깡·패스 버튼 중 하나를 선택합니다.</li>
+          <li>화료할 수 있을 때 쯔모 또는 론 버튼을 눌러 대국을 끝냅니다.</li>
+        </ul>
+        <h3>간단한 규칙</h3>
+        <ul>
+          <li>패를 뽑고 한 장을 버리며, 같은 패 3장 또는 숫자 연속 3장으로 몸통을 만듭니다.</li>
+          <li>기본 화료형은 몸통 4개와 같은 패 2장인 머리입니다. 치토이츠도 지원합니다.</li>
+          <li>화료하려면 완성된 패 모양과 최소 한 가지 역이 필요합니다. 후리텐이면 론할 수 없지만 쯔모는 가능합니다.</li>
+          <li>치·퐁 뒤에는 패를 더 뽑지 않고 손패에서 한 장을 버립니다.</li>
+        </ul>
+      </div>
+
+      <button id="btn-start-game" class="btn btn-action btn-win btn-large">🀄 게임 시작</button>
+      <p class="start-error" id="start-error" role="alert"></p>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="pause-modal" style="display: none;" role="dialog" aria-modal="true" aria-labelledby="pause-title">
+    <div class="modal-box pause-box">
+      <h2 id="pause-title">일시정지</h2>
+      <p>대국이 잠시 멈췄습니다.</p>
+      <button id="btn-resume" class="btn btn-action btn-win btn-large">게임 재개</button>
+    </div>
+  </div>
+
+  <!-- 상대 타패 시 반응 모달 (론 / 퐁 / 치 / 깡 / 패스) -->
+  <div class="modal-overlay" id="reaction-modal" style="display: none;">
+    <div class="modal-box">
+      <h3 id="reaction-title">상대방이 패를 버렸습니다!</h3>
+      <div class="target-tile-preview" id="reaction-target-tile"></div>
+      <div class="modal-btn-group" id="reaction-buttons"></div>
+    </div>
+  </div>
+
+  <!-- 대국 종료 결과 모달 -->
+  <div class="modal-overlay" id="gameover-modal" style="display: none;">
+    <div class="modal-box gameover-box">
+      <h2 id="gameover-title">대국 종료</h2>
+      <div id="gameover-winner-badge" class="winner-badge"></div>
+      <div class="win-tile-display" id="gameover-win-tile"></div>
+      <div class="final-hand" id="gameover-hand"></div>
+      <div class="yaku-list-container">
+        <h4>성립한 역</h4>
+        <ul id="gameover-yaku-list"></ul>
+      </div>
+      <button id="btn-modal-restart" class="btn btn-primary btn-large">다음 대국 시작</button>
+    </div>
+  </div>
+
+  <script src="app.js?v=20261027_meld_flash_2"></script>
+</body>
+</html>

@@ -2,13 +2,17 @@
 
 이 프로젝트는 브라우저 화면과 Python 게임 서버를 함께 실행합니다. GitHub Pages처럼 정적 파일만 제공하는 서비스에는 직접 배포할 수 없으며, Docker 또는 Python 웹 서버를 실행하는 호스팅이 필요합니다.
 
-## GitHub 저장소와 연결하기
+## Render에 배포하기
 
-1. 이 프로젝트 폴더의 전체 파일(`mazak.py`, `gui_server.py`, `m1_tile.py`부터 `m8_game.py`, `web/`, `Dockerfile`)을 GitHub 저장소에 올립니다.
-2. Docker 배포를 지원하는 웹 호스팅에서 해당 저장소를 연결합니다.
-3. 저장소 전체를 배포한다면 게임 폴더를 서비스의 루트 디렉터리로 지정합니다. 상위 `security-agent-toolkit` 저장소를 그대로 사용한다면 루트 디렉터리는 `게임만들기`입니다.
-4. 서비스가 저장소의 `Dockerfile`을 빌드하도록 설정합니다. 컨테이너 플랫폼이 제공하는 `PORT` 값에 맞춰 서버가 시작됩니다.
-5. 배포가 끝나면 서비스가 발급한 HTTPS 주소를 열어 게임이 표시되고 새 대국이 시작되는지 확인합니다.
+저장소에 포함된 `render.yaml`이 Docker 서비스와 `/api/health` 상태 확인 경로를 설정합니다.
+
+1. Render에 로그인하고 **New → Blueprint**를 선택합니다.
+2. GitHub 저장소 `SeA9612/mini-magjong`을 연결한 뒤 이 저장소를 선택합니다.
+3. Blueprint 미리보기에서 `mini-magjong` 웹 서비스를 확인하고 **Apply**를 누릅니다.
+4. 첫 배포가 완료되면 Render가 제공하는 `https://…onrender.com` 주소를 엽니다.
+5. 시작 화면에서 게임 시작을 누르고 패와 버튼이 표시되는지 확인합니다.
+
+무료 웹 서비스는 일정 시간 요청이 없으면 잠들 수 있어, 다시 접속할 때 첫 로딩이 지연될 수 있습니다. Render 무료 서비스의 한계는 [Render 무료 인스턴스 안내](https://render.com/docs/free)를 확인하세요.
 
 ## 공개 동작
 

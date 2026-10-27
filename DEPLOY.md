@@ -7,8 +7,8 @@
 저장소에 포함된 `render.yaml`이 Docker 서비스와 `/api/health` 상태 확인 경로를 설정합니다.
 
 1. Render에 로그인하고 **New → Blueprint**를 선택합니다.
-2. GitHub 저장소 `SeA9612/mini-magjong`을 연결한 뒤 이 저장소를 선택합니다.
-3. Blueprint 미리보기에서 `mini-magjong` 웹 서비스를 확인하고 **Apply**를 누릅니다.
+2. GitHub 저장소 `SeA9612/mini-mahjong`을 연결한 뒤 이 저장소를 선택합니다.
+3. Blueprint 미리보기에서 `mini-mahjong` 웹 서비스를 확인하고 **Apply**를 누릅니다.
 4. 첫 배포가 완료되면 Render가 제공하는 `https://…onrender.com` 주소를 엽니다.
 5. 시작 화면에서 게임 시작을 누르고 패와 버튼이 표시되는지 확인합니다.
 

@@ -4,6 +4,9 @@
 
 ## 로컬 실행
 
+브라우저 상태에서 게임을 실행 할 수 있습니다.
+https://mini-mahjong.onrender.com
+
 Python 3.10 이상에서 프로젝트 폴더를 열고 다음 명령을 실행하세요.
 
 ```powershell

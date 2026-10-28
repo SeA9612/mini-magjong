@@ -175,9 +175,17 @@ def get_waits(hand: Hand) -> List[Tile]:
         return []
 
     waits: List[Tile] = []
-    counts = Counter(t.code for t in hand.all_tiles)
-    for test_tile in ALL_34_TILES:
-        if counts[test_tile.code] < 4 and is_winning_hand(hand, test_tile):
+    visible_counts = Counter(t.code for t in hand.all_tiles)
+    concealed_counts = list(tile_counts(hand.concealed_tiles))
+    for tile_index, test_tile in enumerate(ALL_34_TILES):
+        if visible_counts[test_tile.code] >= 4:
+            continue
+
+        # 샹텐 계산으로 완성형이 되는지 확인한다. 멘츠 분해 결과와
+        # 대기 판정이 어긋나 리치 후보를 놓치는 일을 방지한다.
+        completed_counts = concealed_counts.copy()
+        completed_counts[tile_index] += 1
+        if shanten_from_counts(tuple(completed_counts), len(hand.melds)) == -1:
             waits.append(test_tile)
     return waits
 
@@ -250,3 +258,4 @@ def shanten_from_counts(counts: Tuple[int, ...], open_melds: int = 0) -> int:
 
 def calculate_shanten(hand: Hand) -> int:
     return shanten_from_counts(tile_counts(hand.concealed_tiles), len(hand.melds))
+

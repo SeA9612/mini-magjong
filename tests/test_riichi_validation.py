@@ -7,7 +7,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from gui_server import WebMahjongSession
 from m1_tile import Hand, Tile, Meld
 from m2_winning import get_waits
-from m5_riichi import can_declare_riichi_with_discard
+from m5_riichi import can_declare_riichi_with_discard, get_riichi_discard_candidates
 
 
 def tile(code):
@@ -15,6 +15,14 @@ def tile(code):
 
 
 class RiichiValidationTests(unittest.TestCase):
+    def test_edge_wait_example_is_a_riichi_candidate(self):
+        hand = Hand([tile(c) for c in
+            '1m 2m 3m 1p 2p 3p 5p 6p 7p 9p 9p 8s 9s 4s'.split()])
+
+        self.assertEqual([t.code for t in get_riichi_discard_candidates(hand)], ['4s'])
+        hand.remove(tile('4s'))
+        self.assertEqual([t.code for t in get_waits(hand)], ['7s'])
+
     def session(self):
         s = WebMahjongSession()
         s.game.players[0].hand = Hand([tile(c) for c in
@@ -172,3 +180,4 @@ class RiichiValidationTests(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
+

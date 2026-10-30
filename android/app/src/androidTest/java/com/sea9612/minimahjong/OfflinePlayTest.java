@@ -117,12 +117,12 @@ public class OfflinePlayTest {
                 if (revision != lastRevision) { lastRevision = revision; lastProgress = System.currentTimeMillis(); }
                 assertTrue("No stuck turn at " + difficulty + " revision " + revision, System.currentTimeMillis() - lastProgress < 15000);
                 js("(()=>{if(isSendingAction||isPaused||gameState.is_game_over)return;"
-                    + "if(gameState.pending_reaction?.player_idx===0){const bs=[...document.querySelectorAll('#reaction-buttons button')];"
-                    + "(bs.find(b=>b.textContent.includes('론'))||bs.find(b=>b.textContent.includes('패스')))?.click();return;}"
+                    + "if(gameState.pending_reaction && gameState.pending_reaction.player_idx===0){const bs=[...document.querySelectorAll('#reaction-buttons button')];"
+                    + "const reaction=bs.find(b=>b.textContent.includes('론'))||bs.find(b=>b.textContent.includes('패스'));if(reaction)reaction.click();return;}"
                     + "if(gameState.current_turn!==0)return;"
                     + "if(gameState.human_turn_actions.can_tsumo){btnTsumo.click();return;}"
                     + "if(gameState.players[0].is_riichi){btnTsumogiri.click();return;}"
-                    + "document.querySelector('#drawn-tile-slot .tile:not(.locked), #human-hand-tiles .tile:not(.locked)')?.click();})()");
+                    + "const tile=document.querySelector('#drawn-tile-slot .tile:not(.locked), #human-hand-tiles .tile:not(.locked)');if(tile)tile.click();})()");
                 Thread.sleep(130);
             }
             assertEquals("Round finished: " + difficulty, "true", js("gameState.is_game_over"));

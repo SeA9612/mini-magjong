@@ -20,7 +20,7 @@ Android 7.0 이상, ARM64 휴대폰 및 x86_64 에뮬레이터를 지원합니�
 
 ## 빌드
 
-JDK 17과 Android SDK 35를 설치한 환경에서 이 폴더를 Android Studio로 열거나 다음을 실행합니다. 최초 빌드에는 도구와 의존성 다운로드를 위한 인터넷 연결이 필요하며, 완성된 APK 실행에는 필요하지 않습니다.
+JDK 17, Android SDK 35, Python 3를 설치한 환경에서 이 폴더를 Android Studio로 열거나 다음을 실행합니다. 최초 빌드에는 도구와 의존성 다운로드를 위한 인터넷 연결이 필요하며, 완성된 APK 실행에는 필요하지 않습니다.
 
 ```powershell
 .\gradlew.bat assembleDebug
@@ -29,6 +29,10 @@ JDK 17과 Android SDK 35를 설치한 환경에서 이 폴더를 Android Studio�
 생성 위치: `app/build/outputs/apk/debug/app-debug.apk`
 
 `prepareGameAssets`가 저장소 루트의 Python 엔진과 `web` 파일을 빌드 시 복사합니다. 앱 전용 통신 연결은 `app/src/main/offline/offline_transport.js`, Python 진입점은 `app/src/main/python/offline_engine.py`입니다. 원래 웹 서버를 실행하지 않고 Java 인터페이스로 상태 조회와 행동을 전달합니다.
+
+`compileOfflineScripts`가 앱에 넣을 JavaScript를 Chrome 51 문법으로 변환합니다. Android 7~9의 오래된 WebView가 선택적 연결(`?.`), 객체 전개, async/await 등의 문법 때문에 시작 단계에서 멈추지 않게 합니다. `tools/compile_web.py`가 esbuild 0.25.12를 npm 공식 저장소에서 내려받고 무결성을 검사해 `.tools/`에 캐시합니다. Node.js/npm 설치는 필요하지 않습니다. Python 실행 파일을 지정하려면 `-PcompatPython=C:/path/to/python.exe`를 사용하세요.
+
+v1.0.1에서는 구형 WebView용 문법 변환, 필요한 JavaScript API 보완, CSS Grid 대체 배치와 초기화 실패 안내를 추가했습니다. 서명과 앱 ID는 v1.0과 같아 APK로 업데이트할 수 있습니다.
 
 ## 확인
 

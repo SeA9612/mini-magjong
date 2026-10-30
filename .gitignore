@@ -3,6 +3,7 @@ __pycache__/
 .venv/
 mazak-error.log
 android/.gradle/
+android/.tools/
 android/**/build/
 android/local.properties
 *.apk

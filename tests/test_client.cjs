@@ -3,7 +3,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const vm = require('node:vm');
 const {test} = require('node:test');
-const source = fs.readFileSync(path.join(__dirname, '../web/app.js'), 'utf8');
+const source = fs.readFileSync(process.env.CLIENT_SCRIPT_PATH || path.join(__dirname, '../web/app.js'), 'utf8');
 const styleSource = fs.readFileSync(path.join(__dirname, '../web/style.css'), 'utf8');
 
 function node() {

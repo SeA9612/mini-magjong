@@ -8,3 +8,10 @@
 .start-box .saved-records-card { max-height: 90px; margin-top: 6px; padding: 6px 12px; }
 .start-box .btn-large { padding: 10px 24px; }
 .start-box .how-to-play-panel { max-height: 24vh; }
+
+/* Android 7's built-in WebView predates CSS Grid. */
+@supports not (display: grid) {
+  .discard-pond { display: flex; flex-wrap: wrap; width: 310px; }
+  .discard-pond .tile { margin: 1px; }
+  .yaku-list-container ul { display: block; }
+}

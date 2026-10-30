@@ -10,6 +10,9 @@
       path: url.pathname,
       body: options.body ? JSON.parse(options.body) : null
     })));
+    if (result.status === 200 && result.data && Array.isArray(result.data.players)) {
+      window.offlineGameReady = true;
+    }
     return {
       ok: result.status >= 200 && result.status < 300,
       status: result.status,

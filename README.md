@@ -2,8 +2,6 @@
 
 마작을 잘 모르는 초보자용 미니마작 게임입니다. 브라우저에서 AI와 동풍전을 진행하며, Python 표준 라이브러리로 웹 서버를 실행합니다.
 
-## 로컬 실행
-
 ## Android 오프라인 앱
 
 [APK와 설치 안내 다운로드](https://github.com/SeA9612/mini-mahjong/releases/tag/android-v1.0.0-beta.1)

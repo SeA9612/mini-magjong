@@ -4,6 +4,16 @@
 
 ## 로컬 실행
 
+## Android 오프라인 앱
+
+[APK와 설치 안내 다운로드](https://github.com/SeA9612/mini-mahjong/releases/tag/android-v1.0.0-beta.1)
+
+인터넷 없이 실행되는 직접 설치용 테스트 APK입니다. 게임 화면과 Python 엔진이 앱에 포함됩니다. Android 7.0 이상 ARM64 기기를 대상으로 하며, Android 15 x86_64 에뮬레이터에서 비행기 모드 플레이 테스트를 진행했습니다. 실제 휴대폰의 화면과 터치감은 추가 확인이 필요합니다.
+
+안드로이드 프로젝트와 빌드 방법은 [android/README.md](android/README.md)를 참고하세요.
+
+## 웹 / PC 실행
+
 브라우저 상태에서 게임을 실행 할 수 있습니다.
 https://mini-mahjong.onrender.com
 

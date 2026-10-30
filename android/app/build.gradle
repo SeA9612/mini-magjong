@@ -1,0 +1,52 @@
+plugins {
+    id 'com.android.application'
+    id 'com.chaquo.python'
+}
+
+android {
+    namespace 'com.sea9612.minimahjong'
+    compileSdk 35
+    defaultConfig {
+        applicationId 'com.sea9612.minimahjong'
+        minSdk 24
+        targetSdk 35
+        versionCode 1
+        versionName '1.0-offline'
+        ndk { abiFilters 'arm64-v8a', 'x86_64' }
+        testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
+    }
+    sourceSets.main.assets.srcDir layout.buildDirectory.dir('generated/gameAssets')
+    buildTypes.release { minifyEnabled false }
+}
+
+chaquopy {
+    defaultConfig {
+        version = '3.11'
+        pyc { src = false }
+    }
+}
+
+dependencies {
+    implementation 'androidx.webkit:webkit:1.12.1'
+    androidTestImplementation 'androidx.test:runner:1.6.2'
+    androidTestImplementation 'androidx.test.ext:junit:1.2.1'
+}
+
+tasks.register('prepareGameAssets', Sync) {
+    into layout.buildDirectory.dir('generated/gameAssets')
+    from('../..') {
+        include 'm?_*.py', 'gui_server.py', 'mazak.py', 'web/**'
+        into 'engine'
+    }
+    from('../../web') {
+        into 'game'
+        filesMatching('index.html') {
+            filter { line -> line.replace('width=device-width, initial-scale=1.0', 'width=1100')
+                .replace('이 브라우저에 저장합니다', '이 기기에 저장합니다')
+                .replace('</head>', '<link rel="stylesheet" href="offline.css"></head>')
+                .replace('<script src="app.js', '<script src="offline_transport.js"></script><script src="app.js') }
+        }
+    }
+    from('src/main/offline') { into 'game' }
+}
+tasks.named('preBuild').configure { dependsOn 'prepareGameAssets' }

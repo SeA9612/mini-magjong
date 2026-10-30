@@ -1,0 +1,10 @@
+/* Keep the start controls visible on a landscape phone. Full rules remain
+   available through the existing game-method button. */
+.start-box { max-width: 760px; padding: 12px 24px; }
+.start-box .start-rules-card { display: none; }
+.start-box .start-title { font-size: 1.6rem; }
+.start-box .start-subtitle { font-size: 0.9rem; }
+.start-box .difficulty-card { margin-top: 6px; padding: 7px 12px; }
+.start-box .saved-records-card { max-height: 90px; margin-top: 6px; padding: 6px 12px; }
+.start-box .btn-large { padding: 10px 24px; }
+.start-box .how-to-play-panel { max-height: 24vh; }

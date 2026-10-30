@@ -2,3 +2,9 @@ __pycache__/
 *.py[cod]
 .venv/
 mazak-error.log
+android/.gradle/
+android/**/build/
+android/local.properties
+*.apk
+*.aab
+*.jks
